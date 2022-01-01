@@ -2,21 +2,18 @@ package lunnytsya.com.controller;
 
 import lunnytsya.com.domain.Product;
 import lunnytsya.com.service.ProductService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/product")
@@ -48,8 +45,9 @@ public class ProductRestController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/get-all")
-    public ResponseEntity<List<Product>> getAll() {
-        List<Product> products = productService.findAll();
-        return new ResponseEntity<>(products, HttpStatus.OK);
+    public ResponseEntity<Page<Product>> getAll(
+            @PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Product> page = productService.findAll(pageable);
+        return new ResponseEntity<>(page, HttpStatus.OK);
     }
 }

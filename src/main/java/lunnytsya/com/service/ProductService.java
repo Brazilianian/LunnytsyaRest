@@ -4,9 +4,9 @@ import lunnytsya.com.domain.Product;
 import lunnytsya.com.interfaces.IService;
 import lunnytsya.com.repository.ProductRepo;
 import org.apache.log4j.Logger;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ProductService implements IService<Product> {
@@ -45,7 +45,7 @@ public class ProductService implements IService<Product> {
         }
     }
 
-    public List<Product> findAll() {
-        return productRepo.findAll();
+    public Page<Product> findAll(Pageable pageable) {
+        return productRepo.findAll(pageable);
     }
 }
