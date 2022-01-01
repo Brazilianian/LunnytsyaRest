@@ -1,16 +1,23 @@
 package lunnytsya.com.controller;
 
 import lunnytsya.com.domain.Product;
-import lunnytsya.com.repository.ProductRepo;
 import lunnytsya.com.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+import java.util.Base64;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/product")
 public class ProductRestController {
@@ -22,10 +29,14 @@ public class ProductRestController {
     }
 
     @CrossOrigin(origins = "*")
-    @PostMapping("/create")
-    public ResponseEntity<Product> create(@RequestBody Product product) {
+    @PostMapping(value = "/create")
+    public ResponseEntity<?> create(@RequestBody @Valid Product product, BindingResult bindingResult) {
         if (product == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorMap = ControllerUtils.getErrors(bindingResult);
+            return new ResponseEntity<>(errorMap, HttpStatus.UNPROCESSABLE_ENTITY);
         }
         try {
             productService.save(product);

@@ -6,7 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -29,16 +31,16 @@ public class BackgroundImageController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/create")
-    public ResponseEntity<BackgroundImage> create(@RequestBody BackgroundImage backgroundImage) {
-        if (backgroundImage == null) {
+    public ResponseEntity<MultipartFile> create(@RequestBody MultipartFile image) {
+        if (image == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         try {
-            backgroundImageService.save(backgroundImage);
+            backgroundImageService.save(new BackgroundImage(Base64.getEncoder().encodeToString(image.getBytes())));
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(backgroundImage, HttpStatus.OK);
+        return new ResponseEntity<>(image, HttpStatus.OK);
     }
 
 }

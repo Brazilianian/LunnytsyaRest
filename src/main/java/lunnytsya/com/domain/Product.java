@@ -1,6 +1,10 @@
 package lunnytsya.com.domain;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
 
 @Entity
 public class Product {
@@ -9,11 +13,19 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Length(message = "The size should be less than 255", max = 255)
+    @NotEmpty(message = "The name should not be empty")
     private String name;
+
+    @Positive(message = "The price must be above zero")
     private double price;
+
+    @Length(message = "The length must be less than 1024", max = 1024)
+    @NotEmpty(message = "The description should not be empty")
     private String description;
 
     @Lob
+    @NotEmpty(message = "The image should not be empty")
     private String image;
 
     public Product() {
