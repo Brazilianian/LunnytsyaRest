@@ -17,7 +17,6 @@ public class BackgroundImageController {
 
     private final BackgroundImageService backgroundImageService;
 
-
     public BackgroundImageController(BackgroundImageService backgroundImageService) {
         this.backgroundImageService = backgroundImageService;
     }
@@ -27,6 +26,24 @@ public class BackgroundImageController {
     public ResponseEntity<List<BackgroundImage>> getAll() {
         List<BackgroundImage> backgroundImages = backgroundImageService.findAll();
         return new ResponseEntity<>(backgroundImages, HttpStatus.OK);
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/get-main")
+    public ResponseEntity<BackgroundImage> getMain() {
+        try {
+           return ResponseEntity
+                   .ok()
+                   .body(backgroundImageService.findAll().get(0));
+        } catch (IndexOutOfBoundsException e) {
+            return ResponseEntity
+                    .status(HttpStatus.NO_CONTENT)
+                    .body(null);
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
+        }
     }
 
     @CrossOrigin(origins = "*")
