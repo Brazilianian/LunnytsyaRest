@@ -20,7 +20,7 @@ public class Product {
     @Positive(message = "The price must be above zero")
     private double price;
 
-    @Length(message = "The length must be less than 1024", max = 1024)
+    @Length(message = "The length must be less than 2048", max = 2048)
     @NotEmpty(message = "The description should not be empty")
     private String description;
 
