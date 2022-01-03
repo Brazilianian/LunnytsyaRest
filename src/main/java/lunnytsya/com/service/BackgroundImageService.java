@@ -1,6 +1,6 @@
 package lunnytsya.com.service;
 
-import lunnytsya.com.domain.BackgroundImage;
+import lunnytsya.com.domain.main.page.BackgroundImage;
 import lunnytsya.com.interfaces.IService;
 import lunnytsya.com.repository.BackgroundImageRepo;
 import org.apache.log4j.Logger;

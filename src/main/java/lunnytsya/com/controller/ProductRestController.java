@@ -26,7 +26,7 @@ public class ProductRestController {
     }
 
     @CrossOrigin(origins = "*")
-    @PostMapping(value = "/create")
+    @PostMapping
     public ResponseEntity<?> create(@RequestBody @Valid Product product, BindingResult bindingResult) {
         if (product == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -44,7 +44,7 @@ public class ProductRestController {
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping("/get-all")
+    @GetMapping
     public ResponseEntity<Page<Product>> getAll(
             @PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Product> page = productService.findAll(pageable);

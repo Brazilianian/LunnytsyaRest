@@ -1,4 +1,4 @@
-package lunnytsya.com.domain;
+package lunnytsya.com.domain.main.page;
 
 import javax.persistence.*;
 
