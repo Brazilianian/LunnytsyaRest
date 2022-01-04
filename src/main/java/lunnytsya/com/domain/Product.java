@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
+import java.io.Serializable;
 
 @Entity
 public class Product {
@@ -28,14 +29,25 @@ public class Product {
     @NotEmpty(message = "The image should not be empty")
     private String image;
 
+    private boolean isVisible = true;
+
     public Product() {
     }
 
-    public Product(String name, double price, String description, String image) {
+    public Product(String name, double price, String description, String image, boolean isVisible) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.image = image;
+        this.isVisible = isVisible;
+    }
+
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    public void setVisible(boolean visible) {
+        isVisible = visible;
     }
 
     public Long getId() {

@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -51,5 +50,51 @@ public class ProductRestController {
 
         return ResponseEntity.ok()
                 .body(page);
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProduct(@PathVariable String id) {
+        try {
+            Long productId = Long.parseLong(id);
+            Product product = productService.getById(productId);
+            if (product == null) {
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(product, HttpStatus.OK);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @CrossOrigin(origins = "*")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable String id) {
+        try {
+            Long productId = Long.parseLong(id);
+            productService.delete(productId);
+            return new ResponseEntity<>("" ,HttpStatus.OK);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @CrossOrigin(origins = "*")
+    @PutMapping
+    public ResponseEntity<?> redactProduct(@RequestBody @Valid Product product,
+                                                 BindingResult bindingResult) {
+        if (product == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = ControllerUtils.getErrors(bindingResult);
+            return ResponseEntity.unprocessableEntity().body(errors);
+        }
+        try {
+            productService.update(product);
+            return ResponseEntity.ok(product);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(product);
+        }
     }
 }

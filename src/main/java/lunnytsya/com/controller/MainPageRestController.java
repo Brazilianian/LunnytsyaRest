@@ -94,8 +94,6 @@ public class MainPageRestController {
             }
             if (bindingResult.hasErrors()) {
                 Map<String, String> errors = ControllerUtils.getErrors(bindingResult);
-                System.out.println(author.getDescription().length());
-                System.out.println(errors);
                 return new ResponseEntity<>(errors, HttpStatus.UNPROCESSABLE_ENTITY);
             }
             authorService.save(author);

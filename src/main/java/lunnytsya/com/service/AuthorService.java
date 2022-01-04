@@ -37,7 +37,7 @@ public class AuthorService implements IService<Author> {
     }
 
     @Override
-    public void delete(Author author) {
+    public void delete(Long authorId) {
         logger.warn("NOT IMPLEMENT");
     }
 

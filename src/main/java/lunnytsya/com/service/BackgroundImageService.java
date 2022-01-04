@@ -30,12 +30,12 @@ public class BackgroundImageService implements IService<BackgroundImage> {
     }
 
     @Override
-    public void delete(BackgroundImage backgroundImage) {
-        if (backgroundImageRepo.existsById(backgroundImage.getId())) {
-            backgroundImageRepo.deleteById(backgroundImage.getId());
-            logger.info("The background image with id '" + backgroundImage.getId() + "' was deleted");
+    public void delete(Long backgroundImageId) {
+        if (backgroundImageRepo.existsById(backgroundImageId)) {
+            backgroundImageRepo.deleteById(backgroundImageId);
+            logger.info("The background image with id '" + backgroundImageId + "' was deleted");
         } else {
-            logger.warn("The background image with id '" + backgroundImage.getId() + "' was not delete - there is no one background image with the same id");
+            logger.warn("The background image with id '" + backgroundImageId + "' was not delete - there is no one background image with the same id");
         }
     }
 

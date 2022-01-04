@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+
 @Service
 public class ProductService implements IService<Product> {
 
@@ -26,12 +28,12 @@ public class ProductService implements IService<Product> {
     }
 
     @Override
-    public void delete(Product product) {
-        if (productRepo.existsById(product.getId())) {
-            productRepo.deleteById(product.getId());
-            logger.info("The product with name '" + product.getName() + "' was deleted");
+    public void delete(Long productId) {
+        if (productRepo.existsById(productId)) {
+            productRepo.deleteById(productId);
+            logger.info("The product with id '" + productId + "' was deleted");
         } else {
-            logger.warn("The product with name '" + product.getName() + "' was not delete - there is no one product with id " + product.getId());
+            logger.warn("The product with id '" + productId + "' was not delete - there is no one product with id " + productId);
         }
     }
 
@@ -47,5 +49,16 @@ public class ProductService implements IService<Product> {
 
     public Page<Product> findAll(Pageable pageable) {
         return productRepo.findAll(pageable);
+    }
+
+    public Product getById(Long productId) {
+        try {
+            return productRepo.findById(productId).orElse(null);
+        } catch (EntityNotFoundException e) {
+            return null;
+        } catch (Exception e) {
+            logger.warn(e.getMessage());
+            return null;
+        }
     }
 }

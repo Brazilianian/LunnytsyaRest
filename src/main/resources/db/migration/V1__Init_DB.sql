@@ -22,5 +22,6 @@ create table product
     image       text not null,
     name        varchar(255),
     price       float8 not null,
+    is_visible  boolean default true,
     primary key (id)
 );
