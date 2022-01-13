@@ -6,13 +6,10 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Entity
-public class Product {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class Product extends BaseEntity {
 
     @Length(message = "The size should be less than 255", max = 255)
     @NotEmpty(message = "The name should not be empty")
@@ -34,7 +31,8 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, double price, String description, String image, boolean isVisible) {
+    public Product(Long id, LocalDate created, LocalDate updated, String name, double price, String description, String image, boolean isVisible) {
+        super(id, created, updated);
         this.name = name;
         this.price = price;
         this.description = description;
@@ -48,14 +46,6 @@ public class Product {
 
     public void setVisible(boolean visible) {
         isVisible = visible;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -93,7 +83,7 @@ public class Product {
     @Override
     public String toString() {
         return "Product{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 ", description='" + description + '\'' +

@@ -1,13 +1,11 @@
 package lunnytsya.com.domain.main.page;
 
+import lunnytsya.com.domain.BaseEntity;
+
 import javax.persistence.*;
 
 @Entity
-public class BackgroundImage {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class BackgroundImage extends BaseEntity {
 
     @Lob
     private String content;
@@ -17,14 +15,6 @@ public class BackgroundImage {
 
     public BackgroundImage(String content) {
         this.content = content;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getContent() {

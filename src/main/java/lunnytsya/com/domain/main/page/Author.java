@@ -1,17 +1,15 @@
 package lunnytsya.com.domain.main.page;
 
+import lunnytsya.com.domain.BaseEntity;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDate;
 
 @Entity
-public class Author {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class Author extends BaseEntity {
 
     @Length(message = "The length must me less than 2048", min = 0, max = 2048)
     @NotEmpty(message = "Description must not be empty")
@@ -24,17 +22,10 @@ public class Author {
     public Author() {
     }
 
-    public Author(String description, String image) {
+    public Author(Long id, LocalDate created, LocalDate updated, String description, String image) {
+        super(id, created, updated);
         this.description = description;
         this.image = image;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getDescription() {
