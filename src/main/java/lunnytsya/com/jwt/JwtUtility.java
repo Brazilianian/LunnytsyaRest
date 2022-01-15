@@ -1,4 +1,4 @@
-package lunnytsya.com.utility;
+package lunnytsya.com.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
