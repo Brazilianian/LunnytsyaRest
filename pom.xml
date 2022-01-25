@@ -80,6 +80,7 @@
             <artifactId>flyway-core</artifactId>
         </dependency>
 
+        <!--security-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>

@@ -1,16 +1,20 @@
 package lunnytsya.com.domain;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User extends BaseEntity{
+public class User extends BaseEntity implements UserDetails {
 
     @Size(min = 2, max = 24, message = "The length of the name must be above than 2 but less than 24")
     private String name;
@@ -21,7 +25,7 @@ public class User extends BaseEntity{
     @Size(min = 2, max = 24, message = "The length of the username must be above than 2 but less than 24")
     private String username;
 
-    @Size(min = 8, message = "The length of the password must be above than 8")
+    @Size(min = 2, message = "The length of the password must be above than 8")
     private String password;
 
     @Email
@@ -29,7 +33,7 @@ public class User extends BaseEntity{
 
     private boolean isActive;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private List<Role> roles = new ArrayList<>();
 
@@ -48,28 +52,39 @@ public class User extends BaseEntity{
         this.isActive = isActive;
     }
 
-    public boolean isActive() {
-        return isActive;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
-    }
-
+    @Override
     public String getPassword() {
         return password;
     }
 
-    public String getEmail() {
-        return email;
+    @Override
+    public String getUsername() {
+        return username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isActive;
     }
 
     public String getName() {
@@ -88,19 +103,35 @@ public class User extends BaseEntity{
         this.surname = surname;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
     public List<Role> getRoles() {
         return roles;
     }
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 }

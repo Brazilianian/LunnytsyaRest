@@ -1,5 +1,6 @@
 package lunnytsya.com.controller;
 
+import lunnytsya.com.controller.util.ControllerUtils;
 import lunnytsya.com.domain.main.page.Author;
 import lunnytsya.com.domain.main.page.BackgroundImage;
 import lunnytsya.com.service.AuthorService;
@@ -53,20 +54,6 @@ public class MainPageRestController {
     }
 
     @CrossOrigin(origins = "*")
-    @PostMapping("/background-image")
-    public ResponseEntity<BackgroundImage> create(@RequestBody BackgroundImage image) {
-        if (image == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        try {
-            backgroundImageService.save(image);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(image, HttpStatus.OK);
-    }
-
-    @CrossOrigin(origins = "*")
     @GetMapping("/author")
     public ResponseEntity<Author> getAuthor() {
         try {
@@ -79,29 +66,6 @@ public class MainPageRestController {
             return ResponseEntity
                     .badRequest()
                     .body(new Author());
-        }
-    }
-
-    @CrossOrigin(origins = "*")
-    @PostMapping("/author")
-    public ResponseEntity<?> setAuthor(@RequestBody @Valid Author author,
-                                            BindingResult bindingResult) {
-        try {
-            if (author == null) {
-                return ResponseEntity
-                        .badRequest()
-                        .body(null);
-            }
-            if (bindingResult.hasErrors()) {
-                Map<String, String> errors = ControllerUtils.getErrors(bindingResult);
-                return new ResponseEntity<>(errors, HttpStatus.UNPROCESSABLE_ENTITY);
-            }
-            authorService.save(author);
-            return ResponseEntity.ok(author);
-        } catch (Exception e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(author);
         }
     }
 }

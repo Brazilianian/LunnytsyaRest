@@ -1,4 +1,4 @@
-package lunnytsya.com.controller;
+package lunnytsya.com.controller.util;
 
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class ControllerUtils {
 
-    static Map<String, String> getErrors(BindingResult bindingResult) {
+    static public Map<String, String> getErrors(BindingResult bindingResult) {
         Collector<FieldError, ?, Map<String, String>> collector = Collectors.toMap(
                 FieldError::getField,
                 FieldError::getDefaultMessage

@@ -25,24 +25,6 @@ public class ProductRestController {
     }
 
     @CrossOrigin(origins = "*")
-    @PostMapping
-    public ResponseEntity<?> create(@RequestBody @Valid Product product, BindingResult bindingResult) {
-        if (product == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        if (bindingResult.hasErrors()) {
-            Map<String, String> errorMap = ControllerUtils.getErrors(bindingResult);
-            return new ResponseEntity<>(errorMap, HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-        try {
-            productService.save(product);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(product, HttpStatus.OK);
-    }
-
-    @CrossOrigin(origins = "*")
     @GetMapping
     public ResponseEntity<Page<Product>> getAll(
             @PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable) {
@@ -64,37 +46,6 @@ public class ProductRestController {
             return new ResponseEntity<>(product, HttpStatus.OK);
         } catch (NumberFormatException e) {
             return ResponseEntity.badRequest().body(null);
-        }
-    }
-
-    @CrossOrigin(origins = "*")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable String id) {
-        try {
-            Long productId = Long.parseLong(id);
-            productService.delete(productId);
-            return new ResponseEntity<>("" ,HttpStatus.OK);
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
-
-    @CrossOrigin(origins = "*")
-    @PutMapping
-    public ResponseEntity<?> redactProduct(@RequestBody @Valid Product product,
-                                                 BindingResult bindingResult) {
-        if (product == null) {
-            return ResponseEntity.badRequest().body(null);
-        }
-        if (bindingResult.hasErrors()) {
-            Map<String, String> errors = ControllerUtils.getErrors(bindingResult);
-            return ResponseEntity.unprocessableEntity().body(errors);
-        }
-        try {
-            productService.update(product);
-            return ResponseEntity.ok(product);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(product);
         }
     }
 }
