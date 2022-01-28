@@ -1,4 +1,4 @@
-package lunnytsya.com.controller;
+package lunnytsya.com.controller.auth;
 
 import io.jsonwebtoken.impl.DefaultClaims;
 import lunnytsya.com.controller.util.ControllerUtils;
@@ -14,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +34,8 @@ public class AuthRestController {
 
     private final UserService userService;
 
-    public AuthRestController(JwtUtility jwtUtility, AuthenticationManager authenticationManager, UserService userService) {
+    public AuthRestController(JwtUtility jwtUtility, AuthenticationManager authenticationManager,
+                              UserService userService) {
         this.jwtUtility = jwtUtility;
         this.authenticationManager = authenticationManager;
         this.userService = userService;
@@ -41,7 +43,7 @@ public class AuthRestController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/registration")
-    public ResponseEntity<?> register(@RequestBody @Valid RegistrationUserDto userDto, BindingResult  bindingResult) {
+    public ResponseEntity<?> register(@RequestBody @Valid RegistrationUserDto userDto, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return ResponseEntity.unprocessableEntity().body(ControllerUtils.getErrors(bindingResult));
@@ -90,11 +92,11 @@ public class AuthRestController {
 //        return ResponseEntity.ok(new AuthenticationResponseDto(token));
 //    }
 
-    public Map<String, Object> getMapFromIoJsonwebtokenClaims(DefaultClaims claims) {
-        Map<String, Object> expectedMap = new HashMap<String, Object>();
-        for (Map.Entry<String, Object> entry : claims.entrySet()) {
-            expectedMap.put(entry.getKey(), entry.getValue());
-        }
-        return expectedMap;
-    }
+//    public Map<String, Object> getMapFromIoJsonwebtokenClaims(DefaultClaims claims) {
+//        Map<String, Object> expectedMap = new HashMap<String, Object>();
+//        for (Map.Entry<String, Object> entry : claims.entrySet()) {
+//            expectedMap.put(entry.getKey(), entry.getValue());
+//        }
+//        return tedMap;
+//    }
 }

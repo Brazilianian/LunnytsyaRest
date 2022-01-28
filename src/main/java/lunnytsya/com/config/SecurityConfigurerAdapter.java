@@ -4,12 +4,16 @@ import lunnytsya.com.jwt.JwtFilter;
 import lunnytsya.com.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -21,10 +25,10 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
-    private List<String> allowedOrigins = new ArrayList<String>() {{
+    private final List<String> allowedOrigins = new ArrayList<String>() {{
         add("http://localhost:8080");
     }};
-    private List<String> allowedMethods = new ArrayList<String>() {
+    private final List<String> allowedMethods = new ArrayList<String>() {
         {
             add("GET");
             add("POST");
@@ -33,7 +37,7 @@ public class SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
             add("OPTIONS");
         }
     };
-    private List<String> allowedHeaders = new ArrayList<String>() {{
+    private final List<String> allowedHeaders = new ArrayList<String>() {{
         add("*");
     }};
 
@@ -68,10 +72,9 @@ public class SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
                 and().csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/api/v1/auth/**", "/api/v1/main-page/**", "/api/v1/product/**")
-                .permitAll()
-                .antMatchers("/api/v1/admin/**")
-                .hasRole("ADMIN")
+                    .antMatchers("/api/v1/auth/**", "/api/v1/main-page/**", "/api/v1/product/**").permitAll()
+                    .antMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
+                    .antMatchers("/api/v1/check/**").hasAuthority("USER")
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -81,5 +84,10 @@ public class SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
-
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth
+                .userDetailsService(userService)
+                .passwordEncoder(passwordEncoder);
+    }
 }

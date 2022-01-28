@@ -1,4 +1,4 @@
-package lunnytsya.com.controller.admin;
+package lunnytsya.com.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/admin/check")
-public class AdminCheckRestController {
+@RequestMapping("/api/v1/check")
+public class CheckRestController {
 
-    @GetMapping()
-    public ResponseEntity<?> isAdmin() {
-        return ResponseEntity.ok().body(null);
+    @GetMapping("/auth")
+    public ResponseEntity<?> checkAuth() {
+        return ResponseEntity.ok(null);
     }
 }

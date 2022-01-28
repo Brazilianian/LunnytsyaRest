@@ -34,8 +34,8 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorization = request.getHeader("Authorization");
-        String token = null;
-        String userName = null;
+        String token;
+        String userName;
 
         try {
             if (null != authorization && authorization.startsWith("Bearer ")) {
@@ -60,8 +60,8 @@ public class JwtFilter extends OncePerRequestFilter {
                 }
             }
         } catch (ExpiredJwtException ex) {
-            String isRefreshToken = request.getHeader("isRefreshToken");
-            String requestURL = request.getRequestURL().toString();
+//            String isRefreshToken = request.getHeader("isRefreshToken");
+//            String requestURL = request.getRequestURL().toString();
 
             // allow for Refresh Token creation if following conditions are true.
 //            if (isRefreshToken != null && isRefreshToken.equals("true") && requestURL.contains("refresh-token")) {

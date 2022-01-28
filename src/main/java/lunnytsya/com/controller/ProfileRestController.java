@@ -19,14 +19,4 @@ public class ProfileRestController {
     public ProfileRestController(UserService userService) {
         this.userService = userService;
     }
-
-    @GetMapping
-    public ResponseEntity getProfile(HttpServletRequest request) {
-        User user = userService.getUser(token);
-
-        if (user == null) {
-            return ResponseEntity.badRequest().body(null);
-        }
-        return ResponseEntity.ok(null);
-    }
 }
