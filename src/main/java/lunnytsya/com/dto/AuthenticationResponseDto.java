@@ -1,21 +1,13 @@
 package lunnytsya.com.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AuthenticationResponseDto {
 
     private String jwtToken;
-
-    public AuthenticationResponseDto() {
-    }
-
-    public AuthenticationResponseDto(String jwtToken) {
-        this.jwtToken = jwtToken;
-    }
-
-    public String getJwtToken() {
-        return jwtToken;
-    }
-
-    public void setJwtToken(String jwtToken) {
-        this.jwtToken = jwtToken;
-    }
 }

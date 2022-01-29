@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityExistsException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.xml.bind.ValidationException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,22 +82,4 @@ public class AuthRestController {
 
         return new AuthenticationResponseDto(token);
     }
-
-//    @RequestMapping(value = "/refresh-token", method = RequestMethod.GET)
-//    public ResponseEntity<?> refreshToken(HttpServletRequest request) throws Exception {
-//        // From the HttpRequest get the claims
-//        DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute("claims");
-//
-//        Map<String, Object> expectedMap = getMapFromIoJsonwebtokenClaims(claims);
-//        String token = jwtUtility.doGenerateRefreshToken(expectedMap, expectedMap.get("sub").toString());
-//        return ResponseEntity.ok(new AuthenticationResponseDto(token));
-//    }
-
-//    public Map<String, Object> getMapFromIoJsonwebtokenClaims(DefaultClaims claims) {
-//        Map<String, Object> expectedMap = new HashMap<String, Object>();
-//        for (Map.Entry<String, Object> entry : claims.entrySet()) {
-//            expectedMap.put(entry.getKey(), entry.getValue());
-//        }
-//        return tedMap;
-//    }
 }

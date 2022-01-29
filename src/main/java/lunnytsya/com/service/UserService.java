@@ -12,20 +12,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
+import javax.xml.bind.ValidationException;
 import java.util.Collections;
 
 @Service
 public class UserService implements UserDetailsService {
 
     private final UserRepo userRepo;
-    private final PasswordEncoder passwordEncoder;
     private final JwtUtility jwtUtility;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepo userRepo, PasswordEncoder passwordEncoder, JwtUtility jwtUtility) {
+    public UserService(UserRepo userRepo, JwtUtility jwtUtility, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
-        this.passwordEncoder = passwordEncoder;
         this.jwtUtility = jwtUtility;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -33,7 +34,8 @@ public class UserService implements UserDetailsService {
         return userRepo.findByUsername(username);
     }
 
-    public User registerUser(RegistrationUserDto userDto) {
+    public User registerUser(RegistrationUserDto userDto){
+
         if (!userRepo.existsByUsername(userDto.getUsername())) {
 
             User user = new User();
@@ -44,7 +46,7 @@ public class UserService implements UserDetailsService {
 
             return userRepo.save(user);
         } else {
-            throw new EntityExistsException("The user with this username already exists");
+            throw new EntityExistsException("Користувач з таким імене вже існує");
         }
     }
 
