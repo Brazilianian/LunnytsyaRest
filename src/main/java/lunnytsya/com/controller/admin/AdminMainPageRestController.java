@@ -33,7 +33,7 @@ public class AdminMainPageRestController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         try {
-            backgroundImageService.save(image);
+            image = backgroundImageService.save(image);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -44,22 +44,20 @@ public class AdminMainPageRestController {
     @PostMapping("/author")
     public ResponseEntity<?> setAuthor(@RequestBody @Valid Author author,
                                        BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = ControllerUtils.getErrors(bindingResult);
+            return new ResponseEntity<>(errors, HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
         try {
             if (author == null) {
-                return ResponseEntity
-                        .badRequest()
-                        .body(null);
+                return ResponseEntity.badRequest().body(null);
             }
-            if (bindingResult.hasErrors()) {
-                Map<String, String> errors = ControllerUtils.getErrors(bindingResult);
-                return new ResponseEntity<>(errors, HttpStatus.UNPROCESSABLE_ENTITY);
-            }
-            authorService.save(author);
+
+            author = authorService.save(author);
             return ResponseEntity.ok(author);
         } catch (Exception e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(author);
+            return ResponseEntity.badRequest().body(author);
         }
     }
 }

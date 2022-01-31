@@ -1,19 +1,20 @@
 package lunnytsya.com.service;
 
+import lombok.extern.slf4j.Slf4j;
 import lunnytsya.com.domain.Product;
+import lunnytsya.com.domain.enums.Status;
 import lunnytsya.com.interfaces.IService;
 import lunnytsya.com.repository.ProductRepo;
-import org.apache.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
+import javax.persistence.EntityExistsException;
+import java.time.LocalDate;
 
+@Slf4j
 @Service
 public class ProductService implements IService<Product> {
-
-    final static Logger logger = Logger.getLogger(String.valueOf(ProductService.class));
 
     private final ProductRepo productRepo;
 
@@ -22,29 +23,47 @@ public class ProductService implements IService<Product> {
     }
 
     @Override
-    public void save(Product product) {
-        productRepo.save(product);
-        logger.info("The product with name '" + product.getName() + "' was saved");
+    public Product save(Product product) {
+
+        product.setCreated(LocalDate.now());
+        product.setUpdated(LocalDate.now());
+
+        Product productDb = productRepo.save(product);
+        log.info("The product with name '" + product.getName() + "' was saved");
+        return productDb;
     }
 
     @Override
-    public void delete(Long productId) {
-        if (productRepo.existsById(productId)) {
-            productRepo.deleteById(productId);
-            logger.info("The product with id '" + productId + "' was deleted");
-        } else {
-            logger.warn("The product with id '" + productId + "' was not delete - there is no one product with id " + productId);
+    public Product delete(Long productId) {
+        Product product = null;
+        if (!productRepo.existsById(productId)) {
+            log.warn("The product with id '" + productId + "' was not delete - there is no one product with id " + productId);
+            throw new EntityExistsException("Продукту з іменем '" + product.getName() + "' не існує");
         }
+
+        product = productRepo.getById(productId);
+        product.setStatus(Status.DELETED);
+        product.setUpdated(LocalDate.now());
+        Product productDb = productRepo.save(product);
+
+        log.info("The product with id '" + productId + "' was deleted");
+        return productDb;
     }
 
     @Override
-    public void update(Product product) {
-        if (productRepo.existsById(product.getId())) {
-            productRepo.save(product);
-            logger.info("The product with name '" + product.getName() + "' was updated");
-        } else {
-            logger.warn("The product with name '" + product.getName() + "' was not updated - there is no one product with id " + product.getId());
+    public Product update(Product product) {
+        if (!productRepo.existsById(product.getId())) {
+            log.warn("The product with name '" + product.getName() + "' was not updated - there is no one product with id " + product.getId());
+            throw new EntityExistsException("Продукту з іменем '" + product.getName() + "' не існує");
         }
+
+        Product productDb = productRepo.getById(product.getId());
+        product.setCreated(productDb.getCreated());
+        product.setUpdated(LocalDate.now());
+
+        productDb = productRepo.save(product);
+        log.info("The product with name '" + product.getName() + "' was updated");
+        return productDb;
     }
 
     public Page<Product> findAll(Pageable pageable) {
@@ -52,13 +71,9 @@ public class ProductService implements IService<Product> {
     }
 
     public Product getById(Long productId) {
-        try {
-            return productRepo.findById(productId).orElse(null);
-        } catch (EntityNotFoundException e) {
-            return null;
-        } catch (Exception e) {
-            logger.warn(e.getMessage());
-            return null;
+        if (!productRepo.existsById(productId)) {
+            throw new EntityExistsException("Продукт з id '" + productId + "' не існує");
         }
+        return productRepo.findById(productId).orElse(null);
     }
 }

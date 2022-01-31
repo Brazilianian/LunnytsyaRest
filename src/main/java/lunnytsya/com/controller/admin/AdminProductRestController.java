@@ -32,7 +32,7 @@ public class AdminProductRestController {
             return new ResponseEntity<>(errorMap, HttpStatus.UNPROCESSABLE_ENTITY);
         }
         try {
-            productService.save(product);
+            product = productService.save(product);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -44,8 +44,8 @@ public class AdminProductRestController {
     public ResponseEntity<?> deleteProduct(@PathVariable String id) {
         try {
             Long productId = Long.parseLong(id);
-            productService.delete(productId);
-            return new ResponseEntity<>("" ,HttpStatus.OK);
+            Product product = productService.delete(productId);
+            return new ResponseEntity<>(product ,HttpStatus.OK);
         } catch (NumberFormatException e) {
             return ResponseEntity.badRequest().body(null);
         }
@@ -65,7 +65,7 @@ public class AdminProductRestController {
             return ResponseEntity.unprocessableEntity().body(errors);
         }
         try {
-            productService.update(product);
+            product = productService.update(product);
             return ResponseEntity.ok(product);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(product);

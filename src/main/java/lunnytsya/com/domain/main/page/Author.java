@@ -1,5 +1,8 @@
 package lunnytsya.com.domain.main.page;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lunnytsya.com.domain.BaseEntity;
 import org.hibernate.validator.constraints.Length;
 
@@ -9,38 +12,14 @@ import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Author extends BaseEntity {
 
-    @Length(message = "The length must me less than 2048", min = 0, max = 2048)
-    @NotEmpty(message = "Description must not be empty")
+    @Length(message = "Кількість символів не має переважати за 2048", max = 2048)
     private String description;
 
     @Lob
-    @NotEmpty(message = "Choose the image")
     private String image;
-
-    public Author() {
-    }
-
-    public Author(Long id, LocalDate created, LocalDate updated, String description, String image) {
-        super(id, created, updated);
-        this.description = description;
-        this.image = image;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
 }

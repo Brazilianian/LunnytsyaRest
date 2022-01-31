@@ -1,15 +1,16 @@
 package lunnytsya.com.service;
 
+import lombok.extern.slf4j.Slf4j;
 import lunnytsya.com.domain.main.page.Author;
 import lunnytsya.com.interfaces.IService;
 import lunnytsya.com.repository.AuthorRepo;
-import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
+@Slf4j
 @Service
 public class AuthorService implements IService<Author> {
-
-    final static Logger logger = Logger.getLogger(String.valueOf(BackgroundImageService.class));
 
     private final AuthorRepo authorRepo;
 
@@ -26,23 +27,23 @@ public class AuthorService implements IService<Author> {
     }
 
     @Override
-    public void save(Author author) {
-        try {
-            authorRepo.deleteAll();
-        } catch (Exception e) {
-            logger.warn(e.getMessage());
-        }
-        authorRepo.save(author);
-        logger.info("The author was saved");
+    public Author save(Author author) {
+        author.setCreated(LocalDate.now());
+        author.setUpdated(author.getUpdated());
+        author = authorRepo.save(author);
+        log.info("The author was saved");
+        return author;
     }
 
     @Override
-    public void delete(Long authorId) {
-        logger.warn("NOT IMPLEMENT");
+    public Author delete(Long authorId) {
+        log.warn("NOT IMPLEMENT");
+        return null;
     }
 
     @Override
-    public void update(Author author) {
-        logger.warn("NOT IMPLEMENTS");
+    public Author update(Author author) {
+        log.warn("NOT IMPLEMENTS");
+        return null;
     }
 }

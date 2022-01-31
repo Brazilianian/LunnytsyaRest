@@ -1,13 +1,14 @@
 package lunnytsya.com.service;
 
-import lunnytsya.com.domain.Role;
+import lombok.extern.slf4j.Slf4j;
+import lunnytsya.com.domain.enums.Role;
 import lunnytsya.com.domain.User;
+import lunnytsya.com.domain.enums.Status;
 import lunnytsya.com.dto.ProfileDto;
 import lunnytsya.com.dto.RegistrationUserDto;
+import lunnytsya.com.interfaces.IService;
 import lunnytsya.com.jwt.JwtUtility;
 import lunnytsya.com.repository.UserRepo;
-import net.bytebuddy.implementation.bytecode.Throw;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,20 +18,20 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityExistsException;
 import javax.servlet.http.HttpServletRequest;
 import java.awt.*;
+import java.time.LocalDate;
 import java.util.Collections;
 
+@Slf4j
 @Service
 public class UserService implements UserDetailsService {
 
     private final UserRepo userRepo;
     private final JwtUtility jwtUtility;
-    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepo userRepo, JwtUtility jwtUtility, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepo userRepo, JwtUtility jwtUtility) {
         this.userRepo = userRepo;
         this.jwtUtility = jwtUtility;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -40,18 +41,24 @@ public class UserService implements UserDetailsService {
 
     public User registerUser(RegistrationUserDto userDto){
 
-        if (!userRepo.existsByUsername(userDto.getUsername())) {
-
-            User user = new User();
-            user.setUsername(userDto.getUsername());
-            user.setPassword(userDto.getPassword());
-            user.setRoles(Collections.singletonList(Role.USER));
-            user.setActive(true);
-
-            return userRepo.save(user);
-        } else {
+        if (userRepo.existsByUsername(userDto.getUsername())) {
             throw new EntityExistsException("Користувач з таким імене вже існує");
         }
+
+        User user = new User();
+
+        user.setUsername(userDto.getUsername());
+        user.setPassword(userDto.getPassword());
+
+        user.setRoles(Collections.singletonList(Role.USER));
+        user.setStatus(Status.ENABLED);
+
+        user.setCreated(LocalDate.now());
+        user.setUpdated(LocalDate.now());
+
+        user = userRepo.save(user);
+        log.info("User with username " + userDto.getUsername() + " was successfully registered");
+        return user;
     }
 
     public User getUser(HttpServletRequest request) {
@@ -67,6 +74,7 @@ public class UserService implements UserDetailsService {
     public User updateUser(ProfileDto profileDto) {
 
         if (!userRepo.existsByUsername(profileDto.getUsername())) {
+            log.warn("Couldn`t update profile of user with username '" + profileDto.getUsername());
             throw new EntityExistsException("Користувача з іменем '" + profileDto.getUsername() + "' не існує");
         }
 
@@ -77,6 +85,7 @@ public class UserService implements UserDetailsService {
         user.setEmail(profileDto.getEmail());
         user.setImage(profileDto.getImage());
 
+        user.setUpdated(LocalDate.now());
         return userRepo.save(user);
     }
 }

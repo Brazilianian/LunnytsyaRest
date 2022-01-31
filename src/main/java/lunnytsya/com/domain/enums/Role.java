@@ -1,4 +1,4 @@
-package lunnytsya.com.domain;
+package lunnytsya.com.domain.enums;
 
 import org.springframework.security.core.GrantedAuthority;
 

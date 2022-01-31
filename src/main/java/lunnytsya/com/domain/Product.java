@@ -1,14 +1,19 @@
 package lunnytsya.com.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
-import java.io.Serializable;
-import java.time.LocalDate;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product extends BaseEntity {
 
     @Length(message = "The size should be less than 255", max = 255)
@@ -25,69 +30,4 @@ public class Product extends BaseEntity {
     @Lob
     @NotEmpty(message = "The image should not be empty")
     private String image;
-
-    private boolean isVisible = true;
-
-    public Product() {
-    }
-
-    public Product(Long id, LocalDate created, LocalDate updated, String name, double price, String description, String image, boolean isVisible) {
-        super(id, created, updated);
-        this.name = name;
-        this.price = price;
-        this.description = description;
-        this.image = image;
-        this.isVisible = isVisible;
-    }
-
-    public boolean isVisible() {
-        return isVisible;
-    }
-
-    public void setVisible(boolean visible) {
-        isVisible = visible;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + getId() +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", description='" + description + '\'' +
-                ", image='" + image + '\'' +
-                '}';
-    }
 }

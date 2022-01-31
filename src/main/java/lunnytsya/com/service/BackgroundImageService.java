@@ -1,17 +1,19 @@
 package lunnytsya.com.service;
 
+import lombok.extern.slf4j.Slf4j;
+import lunnytsya.com.domain.enums.Status;
 import lunnytsya.com.domain.main.page.BackgroundImage;
 import lunnytsya.com.interfaces.IService;
 import lunnytsya.com.repository.BackgroundImageRepo;
-import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityExistsException;
+import java.time.LocalDate;
 import java.util.List;
 
+@Slf4j
 @Service
 public class BackgroundImageService implements IService<BackgroundImage> {
-
-    final static Logger logger = Logger.getLogger(String.valueOf(BackgroundImageService.class));
 
     private final BackgroundImageRepo backgroundImageRepo;
 
@@ -24,28 +26,41 @@ public class BackgroundImageService implements IService<BackgroundImage> {
     }
 
     @Override
-    public void save(BackgroundImage backgroundImage) {
-        backgroundImageRepo.save(backgroundImage);
-        logger.info("The background image was saved");
+    public BackgroundImage save(BackgroundImage backgroundImage) {
+        backgroundImage.setCreated(LocalDate.now());
+        backgroundImage.setUpdated(LocalDate.now());
+        backgroundImage = backgroundImageRepo.save(backgroundImage);
+        log.info("The background image was saved");
+        return backgroundImage;
     }
 
     @Override
-    public void delete(Long backgroundImageId) {
+    public BackgroundImage delete(Long backgroundImageId) {
         if (backgroundImageRepo.existsById(backgroundImageId)) {
-            backgroundImageRepo.deleteById(backgroundImageId);
-            logger.info("The background image with id '" + backgroundImageId + "' was deleted");
-        } else {
-            logger.warn("The background image with id '" + backgroundImageId + "' was not delete - there is no one background image with the same id");
+            log.warn("The background image with id '" + backgroundImageId + "' was not delete - there is no one background image with the same id");
+            throw new EntityExistsException("Фонового зображення з id '" + backgroundImageId + "' не існує");
         }
+
+        BackgroundImage backgroundImage = backgroundImageRepo.getById(backgroundImageId);
+        backgroundImage.setStatus(Status.DELETED);
+        backgroundImage.setUpdated(LocalDate.now());
+        backgroundImage = backgroundImageRepo.save(backgroundImage);
+        log.info("The background image with id '" + backgroundImageId + "' was deleted");
+        return backgroundImage;
     }
 
     @Override
-    public void update(BackgroundImage backgroundImage) {
+    public BackgroundImage update(BackgroundImage backgroundImage) {
         if (backgroundImageRepo.existsById(backgroundImage.getId())) {
-            backgroundImageRepo.save(backgroundImage);
-            logger.info("The background image with id '" + backgroundImage.getId() + "' was updated");
-        } else {
-            logger.warn("The background image with id '" + backgroundImage.getId() + "' was not updated - there is no one background image with the same id");
+            log.warn("The background image with id '" + backgroundImage.getId() + "' was not updated - there is no one background image with the same id");
+            throw new EntityExistsException("Фонового зображення з id '" + backgroundImage.getId() + "' не існує");
         }
+
+        BackgroundImage backgroundImageDb = backgroundImageRepo.getById(backgroundImage.getId());
+        backgroundImage.setCreated(backgroundImageDb.getCreated());
+        backgroundImage.setUpdated(LocalDate.now());
+        backgroundImage = backgroundImageRepo.save(backgroundImage);
+        log.info("The background image with id '" + backgroundImage.getId() + "' was updated");
+        return backgroundImage;
     }
 }
