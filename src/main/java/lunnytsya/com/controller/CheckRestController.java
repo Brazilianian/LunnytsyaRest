@@ -11,6 +11,11 @@ public class CheckRestController {
 
     @GetMapping("/auth")
     public ResponseEntity<?> checkAuth() {
-        return ResponseEntity.ok(null);
+        try {
+            return ResponseEntity.ok(null);
+        } catch (Exception e) {
+            System.out.println(e.fillInStackTrace());
+            throw e;
+        }
     }
 }

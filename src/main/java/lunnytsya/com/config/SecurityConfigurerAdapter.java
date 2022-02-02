@@ -38,6 +38,12 @@ public class SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
         }
     };
     private final List<String> allowedHeaders = new ArrayList<String>() {{
+//        add("Authorization");
+//        add("isRefreshToken");
+        add("*");
+    }};
+    private final List<String> exposedHeaders = new ArrayList<String>() {{
+//        add("Exception");
         add("*");
     }};
 
@@ -67,8 +73,10 @@ public class SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
                     cors.setAllowedOrigins(this.allowedOrigins);
                     cors.setAllowedMethods(this.allowedMethods);
                     cors.setAllowedHeaders(this.allowedHeaders);
+                        cors.setExposedHeaders(this.exposedHeaders);
                     return cors;
                 }).
+
                 and().csrf()
                 .disable()
                 .authorizeRequests()

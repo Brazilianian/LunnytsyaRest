@@ -60,15 +60,14 @@ public class JwtFilter extends OncePerRequestFilter {
                 }
             }
         } catch (ExpiredJwtException ex) {
-//            String isRefreshToken = request.getHeader("isRefreshToken");
-//            String requestURL = request.getRequestURL().toString();
-
+            String isRefreshToken = request.getHeader("isRefreshToken");
+            String requestURL = request.getRequestURL().toString();
             // allow for Refresh Token creation if following conditions are true.
-//            if (isRefreshToken != null && isRefreshToken.equals("true") && requestURL.contains("refresh-token")) {
+            if (isRefreshToken != null && isRefreshToken.equals("true") && requestURL.contains("refresh-token")) {
                 allowForRefreshToken(ex, request);
-//            } else {
-//                request.setAttribute("exception", ex);
-//            }
+            } else{
+                response.setHeader("exception", ex.getMessage());
+            }
         }
 
         filterChain.doFilter(request, response);
@@ -86,6 +85,5 @@ public class JwtFilter extends OncePerRequestFilter {
         // Set the claims so that in controller we will be using it to create
         // new JWT
         request.setAttribute("claims", ex.getClaims());
-
     }
 }

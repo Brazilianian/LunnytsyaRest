@@ -8,20 +8,17 @@ import lunnytsya.com.dto.AuthenticationResponseDto;
 import lunnytsya.com.dto.RegistrationUserDto;
 import lunnytsya.com.jwt.JwtUtility;
 import lunnytsya.com.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityExistsException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.xml.bind.ValidationException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,5 +78,24 @@ public class AuthRestController {
         final String token = jwtUtility.generateToken(userDetails);
 
         return new AuthenticationResponseDto(token);
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping(value = "/refresh-token")
+    public ResponseEntity<?> refreshToken(HttpServletRequest request) throws Exception {
+        // From the HttpRequest get the claims
+        DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute("claims");
+
+        Map<String, Object> expectedMap = getMapFromIoJsonwebtokenClaims(claims);
+        String token = jwtUtility.doGenerateRefreshToken(expectedMap, expectedMap.get("sub").toString());
+        return ResponseEntity.ok(new AuthenticationResponseDto(token));
+    }
+
+    public Map<String, Object> getMapFromIoJsonwebtokenClaims(DefaultClaims claims) {
+        Map<String, Object> expectedMap = new HashMap<>();
+        for (Map.Entry<String, Object> entry : claims.entrySet()) {
+            expectedMap.put(entry.getKey(), entry.getValue());
+        }
+        return expectedMap;
     }
 }
