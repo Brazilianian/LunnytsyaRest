@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -27,8 +28,8 @@ public class BackgroundImageService implements IService<BackgroundImage> {
 
     @Override
     public BackgroundImage save(BackgroundImage backgroundImage) {
-        backgroundImage.setCreated(LocalDate.now());
-        backgroundImage.setUpdated(LocalDate.now());
+        backgroundImage.setCreated(LocalDateTime.now());
+        backgroundImage.setUpdated(LocalDateTime.now());
         backgroundImage = backgroundImageRepo.save(backgroundImage);
         log.info("The background image was saved");
         return backgroundImage;
@@ -43,7 +44,7 @@ public class BackgroundImageService implements IService<BackgroundImage> {
 
         BackgroundImage backgroundImage = backgroundImageRepo.getById(backgroundImageId);
         backgroundImage.setStatus(Status.DELETED);
-        backgroundImage.setUpdated(LocalDate.now());
+        backgroundImage.setUpdated(LocalDateTime.now());
         backgroundImage = backgroundImageRepo.save(backgroundImage);
         log.info("The background image with id '" + backgroundImageId + "' was deleted");
         return backgroundImage;
@@ -58,7 +59,7 @@ public class BackgroundImageService implements IService<BackgroundImage> {
 
         BackgroundImage backgroundImageDb = backgroundImageRepo.getById(backgroundImage.getId());
         backgroundImage.setCreated(backgroundImageDb.getCreated());
-        backgroundImage.setUpdated(LocalDate.now());
+        backgroundImage.setUpdated(LocalDateTime.now());
         backgroundImage = backgroundImageRepo.save(backgroundImage);
         log.info("The background image with id '" + backgroundImage.getId() + "' was updated");
         return backgroundImage;

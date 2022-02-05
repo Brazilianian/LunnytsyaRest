@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Slf4j
 @Service
@@ -25,8 +26,8 @@ public class ProductService implements IService<Product> {
     @Override
     public Product save(Product product) {
 
-        product.setCreated(LocalDate.now());
-        product.setUpdated(LocalDate.now());
+        product.setCreated(LocalDateTime.now());
+        product.setUpdated(LocalDateTime.now());
 
         Product productDb = productRepo.save(product);
         log.info("The product with name '" + product.getName() + "' was saved");
@@ -43,7 +44,7 @@ public class ProductService implements IService<Product> {
 
         product = productRepo.getById(productId);
         product.setStatus(Status.DELETED);
-        product.setUpdated(LocalDate.now());
+        product.setUpdated(LocalDateTime.now());
         Product productDb = productRepo.save(product);
 
         log.info("The product with id '" + productId + "' was deleted");
@@ -59,7 +60,7 @@ public class ProductService implements IService<Product> {
 
         Product productDb = productRepo.getById(product.getId());
         product.setCreated(productDb.getCreated());
-        product.setUpdated(LocalDate.now());
+        product.setUpdated(LocalDateTime.now());
 
         productDb = productRepo.save(product);
         log.info("The product with name '" + product.getName() + "' was updated");

@@ -19,6 +19,7 @@ import javax.persistence.EntityExistsException;
 import javax.servlet.http.HttpServletRequest;
 import java.awt.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 @Slf4j
@@ -53,8 +54,8 @@ public class UserService implements UserDetailsService {
         user.setRoles(Collections.singletonList(Role.USER));
         user.setStatus(Status.ENABLED);
 
-        user.setCreated(LocalDate.now());
-        user.setUpdated(LocalDate.now());
+        user.setCreated(LocalDateTime.now());
+        user.setUpdated(LocalDateTime.now());
 
         user = userRepo.save(user);
         log.info("User with username " + userDto.getUsername() + " was successfully registered");
@@ -85,7 +86,7 @@ public class UserService implements UserDetailsService {
         user.setEmail(profileDto.getEmail());
         user.setImage(profileDto.getImage());
 
-        user.setUpdated(LocalDate.now());
+        user.setUpdated(LocalDateTime.now());
         return userRepo.save(user);
     }
 }

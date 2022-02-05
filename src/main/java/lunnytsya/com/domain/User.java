@@ -45,6 +45,9 @@ public class User extends BaseEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private List<Role> roles = new ArrayList<>();
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private Order order;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;

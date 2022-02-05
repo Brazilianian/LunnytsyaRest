@@ -7,6 +7,7 @@ import lunnytsya.com.repository.AuthorRepo;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Slf4j
 @Service
@@ -28,7 +29,7 @@ public class AuthorService implements IService<Author> {
 
     @Override
     public Author save(Author author) {
-        author.setCreated(LocalDate.now());
+        author.setCreated(LocalDateTime.now());
         author.setUpdated(author.getUpdated());
         author = authorRepo.save(author);
         log.info("The author was saved");
