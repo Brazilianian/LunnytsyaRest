@@ -27,6 +27,7 @@ public class SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
     private final List<String> allowedOrigins = new ArrayList<String>() {{
         add("http://localhost:8080");
+        add("http://192.168.43.182:8080/");
     }};
     private final List<String> allowedMethods = new ArrayList<String>() {
         {

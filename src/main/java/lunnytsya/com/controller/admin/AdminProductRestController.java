@@ -51,8 +51,6 @@ public class AdminProductRestController {
         }
     }
 
-
-
     @CrossOrigin(origins = "*")
     @PutMapping
     public ResponseEntity<?> redactProduct(@RequestBody @Valid Product product,
