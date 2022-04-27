@@ -70,6 +70,9 @@ public class ProductService implements IService<Product> {
         }
 
         Product productDb = productRepo.findById(product.getId()).get();
+        if (Objects.equals(productDb.getName(), product.getName())) {
+            return null;
+        }
         product.setCreated(productDb.getCreated());
         product.setUpdated(LocalDateTime.now());
 

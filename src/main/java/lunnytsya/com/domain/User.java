@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,6 +38,9 @@ public class User extends BaseEntity implements UserDetails {
 
     @Email
     private String email;
+
+    @Pattern(regexp = "(\\+38)?0(44|95|66|50)\\d{7}", message = "Невалідний номер телефону")
+    private String phone;
 
     @Lob
     private String image;
