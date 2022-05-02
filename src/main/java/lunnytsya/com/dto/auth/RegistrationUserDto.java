@@ -1,4 +1,4 @@
-package lunnytsya.com.dto;
+package lunnytsya.com.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

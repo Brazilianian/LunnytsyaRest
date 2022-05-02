@@ -8,7 +8,6 @@ import lunnytsya.com.repository.BackgroundImageRepo;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -38,30 +37,30 @@ public class BackgroundImageService implements IService<BackgroundImage> {
     @Override
     public BackgroundImage delete(Long backgroundImageId) {
         if (backgroundImageRepo.existsById(backgroundImageId)) {
-            log.warn("The background image with id '" + backgroundImageId + "' was not delete - there is no one background image with the same id");
-            throw new EntityExistsException("Фонового зображення з id '" + backgroundImageId + "' не існує");
+            log.warn(String.format("The background image with id '%d' was not delete - there is no one background image with the same id", backgroundImageId));
+            throw new EntityExistsException(String.format("Фонового зображення з id '%d' не існує", backgroundImageId));
         }
 
         BackgroundImage backgroundImage = backgroundImageRepo.getById(backgroundImageId);
         backgroundImage.setStatus(Status.DELETED);
         backgroundImage.setUpdated(LocalDateTime.now());
         backgroundImage = backgroundImageRepo.save(backgroundImage);
-        log.info("The background image with id '" + backgroundImageId + "' was deleted");
+        log.info(String.format("The background image with id '%d' was deleted", backgroundImageId));
         return backgroundImage;
     }
 
     @Override
     public BackgroundImage update(BackgroundImage backgroundImage) {
         if (backgroundImageRepo.existsById(backgroundImage.getId())) {
-            log.warn("The background image with id '" + backgroundImage.getId() + "' was not updated - there is no one background image with the same id");
-            throw new EntityExistsException("Фонового зображення з id '" + backgroundImage.getId() + "' не існує");
+            log.warn(String.format("The background image with id '%d' was not updated - there is no one background image with the same id", backgroundImage.getId()));
+            throw new EntityExistsException(String.format("Фонового зображення з id '%d' не існує", backgroundImage.getId()));
         }
 
         BackgroundImage backgroundImageDb = backgroundImageRepo.getById(backgroundImage.getId());
         backgroundImage.setCreated(backgroundImageDb.getCreated());
         backgroundImage.setUpdated(LocalDateTime.now());
         backgroundImage = backgroundImageRepo.save(backgroundImage);
-        log.info("The background image with id '" + backgroundImage.getId() + "' was updated");
+        log.info(String.format("The background image with id '%d' was updated", backgroundImage.getId()));
         return backgroundImage;
     }
 }

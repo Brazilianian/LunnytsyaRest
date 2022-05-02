@@ -3,9 +3,9 @@ package lunnytsya.com.controller.auth;
 import io.jsonwebtoken.impl.DefaultClaims;
 import lunnytsya.com.controller.util.ControllerUtils;
 import lunnytsya.com.domain.User;
-import lunnytsya.com.dto.AuthenticationRequestDto;
-import lunnytsya.com.dto.AuthenticationResponseDto;
-import lunnytsya.com.dto.RegistrationUserDto;
+import lunnytsya.com.dto.auth.AuthenticationRequestDto;
+import lunnytsya.com.dto.auth.AuthenticationResponseDto;
+import lunnytsya.com.dto.auth.RegistrationUserDto;
 import lunnytsya.com.jwt.JwtUtility;
 import lunnytsya.com.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.DelayQueue;
 
 @RestController
 @RequestMapping("/api/v1/auth")
